@@ -26,7 +26,68 @@
 #import "TOCropOverlayView.h"
 #import "TOCropScrollView.h"
 
+
+
+
+
 #define TOCROPVIEW_BACKGROUND_COLOR [UIColor colorWithWhite:0.12f alpha:1.0f]
+
+
+@interface TOCropViewBackgroundContainerView : UIView
+
+//@property (nonatomic, assign) BOOL translucencyAlwaysHidden;
+@property (nonatomic, strong, readonly) id translucencyEffect;                /* The dark blur visual effect applied to the visual effect view. */
+@property (nonatomic, strong, readonly) UIView *translucencyView;             /* A blur view that is made visible when the user isn't interacting with the crop view */
+@end
+
+@implementation TOCropViewBackgroundContainerView
+
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+//        self.translucencyAlwaysHidden = NO;
+        
+        _translucencyView = [UIView new];
+        _translucencyView.frame = self.bounds;
+        _translucencyView.backgroundColor = TOCROPVIEW_BACKGROUND_COLOR;
+        self.translucencyView.userInteractionEnabled = NO;
+        self.translucencyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        [self addSubview:self.translucencyView];
+    }
+    return self;
+}
+
+- (void)addSubview:(UIView *)view {
+    [super addSubview:view];
+    [self bringSubviewToFront:self.translucencyView];
+}
+
+//- (void)setTranslucencyAlwaysHidden:(BOOL)translucencyAlwaysHidden {
+//    _translucencyAlwaysHidden = translucencyAlwaysHidden;
+//    [self.translucencyView removeFromSuperview];
+//    if (_translucencyAlwaysHidden) {
+//    } else {
+//        //Translucency View
+//        if (NSClassFromString(@"UIVisualEffectView")) {
+//            _translucencyEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//            _translucencyView = [[UIVisualEffectView alloc] initWithEffect:self.translucencyEffect];
+//            _translucencyView.frame = self.bounds;
+//        }
+//        else {
+//            UIToolbar *toolbar = [[UIToolbar alloc] init];
+//            toolbar.barStyle = UIBarStyleBlack;
+//            _translucencyView = toolbar;
+//            _translucencyView.frame = CGRectInset(self.bounds, -1.0f, -1.0f);
+//        }
+//    }
+//    self.translucencyView.userInteractionEnabled = NO;
+//    self.translucencyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    [self addSubview:self.translucencyView];
+//}
+
+@end
+
+
 
 static const CGFloat kTOCropViewPadding = 14.0f;
 static const NSTimeInterval kTOCropTimerDuration = 0.8f;
@@ -55,7 +116,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 
 /* Views */
 @property (nonatomic, strong) UIImageView *backgroundImageView;     /* The main image view, placed within the scroll view */
-@property (nonatomic, strong) UIView *backgroundContainerView;      /* A view which contains the background image view, to separate its transforms from the scroll view. */
+@property (nonatomic, strong) TOCropViewBackgroundContainerView *backgroundContainerView;      /* A view which contains the background image view, to separate its transforms from the scroll view. */
 @property (nonatomic, strong, readwrite) UIView *foregroundContainerView;
 @property (nonatomic, strong) UIImageView *foregroundImageView;     /* A copy of the background image view, placed over the dimming views */
 @property (nonatomic, strong) TOCropScrollView *scrollView;         /* The scroll view in charge of panning/zooming the image. */
@@ -132,6 +193,15 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     return self;
 }
 
+- (UIView *)translucencyView {
+    return self.backgroundContainerView.translucencyView;
+}
+
+
+- (id)translucencyEffect {
+    return self.backgroundContainerView.translucencyEffect;
+}
+
 - (void)setup
 {
     __weak typeof(self) weakSelf = self;
@@ -180,7 +250,7 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     self.backgroundImageView.layer.minificationFilter = kCAFilterTrilinear;
     
     //Background container view
-    self.backgroundContainerView = [[UIView alloc] initWithFrame:self.backgroundImageView.frame];
+    self.backgroundContainerView = [[TOCropViewBackgroundContainerView alloc] initWithFrame:self.backgroundImageView.frame];
     [self.backgroundContainerView addSubview:self.backgroundImageView];
     [self.scrollView addSubview:self.backgroundContainerView];
     
@@ -192,22 +262,24 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
     self.overlayView.userInteractionEnabled = NO;
     [self addSubview:self.overlayView];
     
+//    self.translucencyView.backgroundColor = self.backgroundColor;
+    
     //Translucency View
-    if (NSClassFromString(@"UIVisualEffectView")) {
-        self.translucencyEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        self.translucencyView = [[UIVisualEffectView alloc] initWithEffect:self.translucencyEffect];
-        self.translucencyView.frame = self.bounds;
-    }
-    else {
-        UIToolbar *toolbar = [[UIToolbar alloc] init];
-        toolbar.barStyle = UIBarStyleBlack;
-        self.translucencyView = toolbar;
-        self.translucencyView.frame = CGRectInset(self.bounds, -1.0f, -1.0f);
-    }
-    self.translucencyView.hidden = self.translucencyAlwaysHidden;
-    self.translucencyView.userInteractionEnabled = NO;
-    self.translucencyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self addSubview:self.translucencyView];
+//    if (NSClassFromString(@"UIVisualEffectView")) {
+//        self.translucencyEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+//        self.translucencyView = [[UIVisualEffectView alloc] initWithEffect:self.translucencyEffect];
+//        self.translucencyView.frame = self.bounds;
+//    }
+//    else {
+//        UIToolbar *toolbar = [[UIToolbar alloc] init];
+//        toolbar.barStyle = UIBarStyleBlack;
+//        self.translucencyView = toolbar;
+//        self.translucencyView.frame = CGRectInset(self.bounds, -1.0f, -1.0f);
+//    }
+//    self.translucencyView.hidden = self.translucencyAlwaysHidden;
+//    self.translucencyView.userInteractionEnabled = NO;
+//    self.translucencyView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+//    [self addSubview:self.translucencyView];
     
     // The forground container that holds the foreground image view
     self.foregroundContainerView = [[UIView alloc] initWithFrame:(CGRect){0,0,200,200}];
@@ -760,12 +832,14 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 
 - (void)toggleTranslucencyViewVisible:(BOOL)visible
 {
-    if (self.dynamicBlurEffect == NO) {
-        self.translucencyView.alpha = visible ? 1.0f : 0.0f;
-    }
-    else {
-        [(UIVisualEffectView *)self.translucencyView setEffect:visible ? self.translucencyEffect : nil];
-    }
+    self.translucencyView.alpha = visible ? 1.0f : 0.0f;
+    return;
+//    if (self.dynamicBlurEffect == NO || _translucencyAlwaysHidden) {
+//        self.translucencyView.alpha = visible ? 1.0f : 0.0f;
+//    }
+//    else {
+//        [(UIVisualEffectView *)self.translucencyView setEffect:visible ? self.translucencyEffect : nil];
+//    }
 }
 
 - (void)updateToImageCropFrame:(CGRect)imageCropframe
@@ -1168,7 +1242,8 @@ typedef NS_ENUM(NSInteger, TOCropViewOverlayEdge) {
 {
     if (_translucencyAlwaysHidden == translucencyAlwaysHidden) { return; }
     _translucencyAlwaysHidden = translucencyAlwaysHidden;
-    self.translucencyView.hidden = _translucencyAlwaysHidden;
+//    self.translucencyView.hidden = _translucencyAlwaysHidden;
+//    _backgroundContainerView.translucencyAlwaysHidden = _translucencyAlwaysHidden;
 }
 
 - (void)setGridOverlayHidden:(BOOL)gridOverlayHidden
