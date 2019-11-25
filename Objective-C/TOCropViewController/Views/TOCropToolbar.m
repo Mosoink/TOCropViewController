@@ -89,24 +89,6 @@
     [_doneIconButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_doneIconButton];
     
-    _cancelTextButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    
-    [_cancelTextButton setTitle: _cancelTextButtonTitle ?
-        _cancelTextButtonTitle : NSLocalizedStringFromTableInBundle(@"Cancel",
-																	@"TOCropViewControllerLocalizable",
-																	resourceBundle,
-                                                                    nil)
-                       forState:UIControlStateNormal];
-    [_cancelTextButton.titleLabel setFont:[UIFont systemFontOfSize:17.0f]];
-    [_cancelTextButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [_cancelTextButton sizeToFit];
-    [self addSubview:_cancelTextButton];
-    
-    _cancelIconButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_cancelIconButton setImage:[TOCropToolbar cancelImage] forState:UIControlStateNormal];
-    [_cancelIconButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_cancelIconButton];
-    
     _clampButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _clampButton.contentMode = UIViewContentModeCenter;
     _clampButton.tintColor = [UIColor whiteColor];
@@ -114,25 +96,19 @@
     [_clampButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_clampButton];
     
-    _rotateCounterclockwiseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _rotateCounterclockwiseButton.contentMode = UIViewContentModeCenter;
-    _rotateCounterclockwiseButton.tintColor = [UIColor whiteColor];
-    [_rotateCounterclockwiseButton setImage:[TOCropToolbar rotateCCWImage] forState:UIControlStateNormal];
-    [_rotateCounterclockwiseButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_rotateCounterclockwiseButton];
-    
-    _rotateClockwiseButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _rotateClockwiseButton.contentMode = UIViewContentModeCenter;
-    _rotateClockwiseButton.tintColor = [UIColor whiteColor];
-    [_rotateClockwiseButton setImage:[TOCropToolbar rotateCWImage] forState:UIControlStateNormal];
-    [_rotateClockwiseButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
-    [self addSubview:_rotateClockwiseButton];
+    _rotateButton = [UIButton buttonWithType:UIButtonTypeSystem];
+    _rotateButton.contentMode = UIViewContentModeCenter;
+    _rotateButton.tintColor = [UIColor whiteColor];
+    [_rotateButton setImage:[TOCropToolbar rotateCWImage] forState:UIControlStateNormal];
+    [_rotateButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
+    [self addSubview:_rotateButton];
     
     _resetButton = [UIButton buttonWithType:UIButtonTypeSystem];
     _resetButton.contentMode = UIViewContentModeCenter;
     _resetButton.tintColor = [UIColor whiteColor];
     _resetButton.enabled = NO;
-    [_resetButton setImage:[TOCropToolbar resetImage] forState:UIControlStateNormal];
+    [_resetButton setTitle:NSLocalizedStringFromTableInBundle(@"Reset", @"TOCropViewControllerLocalizable", resourceBundle,nil)
+                  forState:UIControlStateNormal];
     [_resetButton addTarget:self action:@selector(buttonTapped:) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:_resetButton];
 }
@@ -144,8 +120,6 @@
     BOOL verticalLayout = (CGRectGetWidth(self.bounds) < CGRectGetHeight(self.bounds));
     CGSize boundsSize = self.bounds.size;
     
-    self.cancelIconButton.hidden = (!verticalLayout);
-    self.cancelTextButton.hidden = (verticalLayout);
     self.doneIconButton.hidden   = (!verticalLayout);
     self.doneTextButton.hidden   = (verticalLayout);
 
@@ -207,7 +181,6 @@
             width = CGRectGetMinX(self.cancelTextButton.frame) - CGRectGetMaxX(self.doneTextButton.frame);
         }
         
-        CGRect containerRect = CGRectIntegral((CGRect){x,frame.origin.y,width,44.0f});
 
 #if TOCROPTOOLBAR_DEBUG_SHOWING_BUTTONS_CONTAINER_RECT
         containerView.frame = containerRect;
@@ -215,23 +188,18 @@
         
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
-        NSMutableArray *buttonsInOrderHorizontally = [NSMutableArray new];
-        if (!self.rotateCounterclockwiseButtonHidden) {
-            [buttonsInOrderHorizontally addObject:self.rotateCounterclockwiseButton];
+        if (!self.rotateButtonHidden) {
+            self.rotateButton.frame = CGRectMake(0,
+                                                 (frame.size.height - buttonSize.height) / 2.,
+                                                 buttonSize.width,
+                                                 buttonSize.height);
         }
-        
         if (!self.resetButtonHidden) {
-            [buttonsInOrderHorizontally addObject:self.resetButton];
+            self.resetButton.frame = CGRectMake((self.bounds.size.width - buttonSize.width) / 2.,
+                                                (self.bounds.size.height - buttonSize.height) / 2.,
+                                                buttonSize.width,
+                                                buttonSize.height);
         }
-        
-        if (!self.clampButtonHidden) {
-            [buttonsInOrderHorizontally addObject:self.clampButton];
-        }
-        
-        if (!self.rotateClockwiseButtonHidden) {
-            [buttonsInOrderHorizontally addObject:self.rotateClockwiseButton];
-        }
-        [self layoutToolbarButtons:buttonsInOrderHorizontally withSameButtonSize:buttonSize inContainerRect:containerRect horizontally:YES];
     }
     else {
         CGRect frame = CGRectZero;
@@ -254,10 +222,6 @@
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
         NSMutableArray *buttonsInOrderVertically = [NSMutableArray new];
-        if (!self.rotateCounterclockwiseButtonHidden) {
-            [buttonsInOrderVertically addObject:self.rotateCounterclockwiseButton];
-        }
-        
         if (!self.resetButtonHidden) {
             [buttonsInOrderVertically addObject:self.resetButton];
         }
@@ -266,8 +230,8 @@
             [buttonsInOrderVertically addObject:self.clampButton];
         }
         
-        if (!self.rotateClockwiseButtonHidden) {
-            [buttonsInOrderVertically addObject:self.rotateClockwiseButton];
+        if (!self.rotateButtonHidden) {
+            [buttonsInOrderVertically addObject:self.rotateButton];
         }
         
         [self layoutToolbarButtons:buttonsInOrderVertically withSameButtonSize:buttonSize inContainerRect:containerRect horizontally:NO];
@@ -300,22 +264,15 @@
 
 - (void)buttonTapped:(id)button
 {
-    if (button == self.cancelTextButton || button == self.cancelIconButton) {
-        if (self.cancelButtonTapped)
-            self.cancelButtonTapped();
-    }
-    else if (button == self.doneTextButton || button == self.doneIconButton) {
+    if (button == self.doneTextButton || button == self.doneIconButton) {
         if (self.doneButtonTapped)
             self.doneButtonTapped();
     }
     else if (button == self.resetButton && self.resetButtonTapped) {
         self.resetButtonTapped();
     }
-    else if (button == self.rotateCounterclockwiseButton && self.rotateCounterclockwiseButtonTapped) {
-        self.rotateCounterclockwiseButtonTapped();
-    }
-    else if (button == self.rotateClockwiseButton && self.rotateClockwiseButtonTapped) {
-        self.rotateClockwiseButtonTapped();
+    else if (button == self.rotateButton && self.rotateButtonTapped) {
+        self.rotateButtonTapped();
     }
     else if (button == self.clampButton && self.clampButtonTapped) {
         self.clampButtonTapped();
@@ -349,15 +306,6 @@
         self.clampButton.tintColor = [UIColor whiteColor];
 }
 
-- (void)setRotateCounterClockwiseButtonHidden:(BOOL)rotateButtonHidden
-{
-    if (_rotateCounterclockwiseButtonHidden == rotateButtonHidden)
-        return;
-    
-    _rotateCounterclockwiseButtonHidden = rotateButtonHidden;
-    [self setNeedsLayout];
-}
-
 - (BOOL)resetButtonEnabled
 {
     return self.resetButton.enabled;
@@ -374,12 +322,6 @@
         return self.doneIconButton.frame;
     
     return self.doneTextButton.frame;
-}
-
-- (void)setCancelTextButtonTitle:(NSString *)cancelTextButtonTitle {
-    _cancelTextButtonTitle = cancelTextButtonTitle;
-    [_cancelTextButton setTitle:_cancelTextButtonTitle forState:UIControlStateNormal];
-    [_cancelTextButton sizeToFit];
 }
 
 - (void)setDoneTextButtonTitle:(NSString *)doneTextButtonTitle {
@@ -580,18 +522,6 @@
 }
 
 #pragma mark - Accessors -
-
-- (void)setRotateClockwiseButtonHidden:(BOOL)rotateClockwiseButtonHidden
-{
-    if (_rotateClockwiseButtonHidden == rotateClockwiseButtonHidden) {
-        return;
-    }
-    
-    _rotateClockwiseButtonHidden = rotateClockwiseButtonHidden;
-    
-    [self setNeedsLayout];
-}
-
 - (void)setResetButtonHidden:(BOOL)resetButtonHidden
 {
     if (_resetButtonHidden == resetButtonHidden) {
@@ -601,10 +531,6 @@
     _resetButtonHidden = resetButtonHidden;
     
     [self setNeedsLayout];
-}
-- (UIButton *)rotateButton
-{
-    return self.rotateCounterclockwiseButton;
 }
 
 - (void)setStatusBarHeightInset:(CGFloat)statusBarHeightInset

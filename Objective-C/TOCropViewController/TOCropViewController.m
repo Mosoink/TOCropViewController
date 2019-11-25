@@ -27,6 +27,17 @@
 #import "UIImage+CropRotate.h"
 #import "TOCroppedImageAttributes.h"
 
+#define isIphoneX ({\
+BOOL isPhoneX = NO;\
+if (@available(iOS 11.0, *)) {\
+    if (!UIEdgeInsetsEqualToEdgeInsets([UIApplication sharedApplication].delegate.window.safeAreaInsets, UIEdgeInsetsZero)) {\
+    isPhoneX = YES;\
+    }\
+}\
+isPhoneX;\
+})
+
+
 static const CGFloat kTOCropViewControllerTitleTopPadding = 14.0f;
 static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
@@ -67,6 +78,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 /* Flag to perform initial setup on the first run */
 @property (nonatomic, assign) BOOL firstTime;
 
+@property (nonatomic, strong) UIButton *cancelButton;
 @end
 
 @implementation TOCropViewController
@@ -119,16 +131,18 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
     // Set up toolbar default behaviour
     self.toolbar.clampButtonHidden = self.aspectRatioPickerButtonHidden || circularMode;
-    self.toolbar.rotateClockwiseButtonHidden = self.rotateClockwiseButtonHidden;
+    self.toolbar.rotateButtonHidden = self.rotateButtonHidden;
     
     // Set up the toolbar button actions
     __weak typeof(self) weakSelf = self;
     self.toolbar.doneButtonTapped   = ^{ [weakSelf doneButtonTapped]; };
-    self.toolbar.cancelButtonTapped = ^{ [weakSelf cancelButtonTapped]; };
     self.toolbar.resetButtonTapped = ^{ [weakSelf resetCropViewLayout]; };
     self.toolbar.clampButtonTapped = ^{ [weakSelf showAspectRatioDialog]; };
-    self.toolbar.rotateCounterclockwiseButtonTapped = ^{ [weakSelf rotateCropViewCounterclockwise]; };
-    self.toolbar.rotateClockwiseButtonTapped        = ^{ [weakSelf rotateCropViewClockwise]; };
+    self.toolbar.rotateButtonTapped = ^{ [weakSelf rotateCropViewClockwise]; };
+    
+    [self.view addSubview:self.cancelButton];
+    
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -1014,6 +1028,19 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 }
 
 #pragma mark - Property Methods -
+- (UIButton *)cancelButton {
+    if (!_cancelButton) {
+        _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _cancelButton.backgroundColor = [UIColor clearColor];
+
+        BOOL isX = isIphoneX;
+        _cancelButton.frame = CGRectMake(10, isX ? 44 : 20, 44, 44);
+
+        NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(self);
+        self.cancelButtonTitle = NSLocalizedStringFromTableInBundle(@"Cancel", @"TOCropViewControllerLocalizable", resourceBundle,nil);
+    }
+    return _cancelButton;
+}
 
 - (void)setTitle:(NSString *)title
 {
@@ -1036,7 +1063,12 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 }
 
 - (void)setCancelButtonTitle:(NSString *)title {
-    self.toolbar.cancelTextButtonTitle = title;
+    [self.cancelButton setTitle:title forState:UIControlStateNormal];
+    CGFloat w = [self.cancelButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, 44)].width;
+    w = MAX((CGFloat)44, w);
+    CGRect f = self.cancelButton.frame;
+    f.size.width = w;
+    self.cancelButton.frame = f;
 }
 
 - (TOCropView *)cropView {
@@ -1100,8 +1132,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 - (void)setRotateButtonsHidden:(BOOL)rotateButtonsHidden
 {
-    self.toolbar.rotateCounterclockwiseButtonHidden = rotateButtonsHidden;
-    self.toolbar.rotateClockwiseButtonHidden = rotateButtonsHidden;
+    self.toolbar.rotateButtonHidden = rotateButtonsHidden;
 }
 
 - (void)setResetButtonHidden:(BOOL)resetButtonHidden
@@ -1111,16 +1142,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 - (BOOL)rotateButtonsHidden
 {
-    return self.toolbar.rotateCounterclockwiseButtonHidden && self.toolbar.rotateClockwiseButtonHidden;
-}
-
-- (void)setRotateClockwiseButtonHidden:(BOOL)rotateClockwiseButtonHidden
-{
-    self.toolbar.rotateClockwiseButtonHidden = rotateClockwiseButtonHidden;
-}
-
-- (BOOL)rotateClockwiseButtonHidden {
-    return self.toolbar.rotateClockwiseButtonHidden;
+    return self.toolbar.rotateButtonHidden;
 }
 
 - (void)setAspectRatioPickerButtonHidden:(BOOL)aspectRatioPickerButtonHidden

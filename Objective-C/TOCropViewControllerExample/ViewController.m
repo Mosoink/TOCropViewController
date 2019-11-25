@@ -28,7 +28,8 @@
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     TOCropViewController *cropController = [[TOCropViewController alloc] initWithCroppingStyle:self.croppingStyle image:image];
     cropController.delegate = self;
-
+    cropController.toolbar.resetButton.tintColor = [UIColor redColor];
+//    [cropController.toolbar.doneIconButton setImage:[UIImage imageNamed:@""] forState:UIControlStateNormal];
     // Uncomment this if you wish to provide extra instructions via a title label
     //cropController.title = @"Crop Image";
 

@@ -221,7 +221,7 @@
  
  Default is NO.
  */
-@property (nonatomic, assign) BOOL rotateClockwiseButtonHidden;
+@property (nonatomic, assign) BOOL rotateButtonHidden;
 
 /*
  If this controller is embedded in UINavigationController its navigation bar is hidden by default. Set this property to false to show the navigation bar. This must be set before this controller is presented.
