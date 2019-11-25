@@ -139,9 +139,9 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     self.toolbar.resetButtonTapped = ^{ [weakSelf resetCropViewLayout]; };
     self.toolbar.clampButtonTapped = ^{ [weakSelf showAspectRatioDialog]; };
     self.toolbar.rotateButtonTapped = ^{ [weakSelf rotateCropViewClockwise]; };
+    [self.cancelButton addTarget:self action:@selector(cancelButtonTapped) forControlEvents:UIControlEventTouchUpInside];
     
     [self.view addSubview:self.cancelButton];
-    
     
 }
 
