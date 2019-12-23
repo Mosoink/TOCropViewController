@@ -83,6 +83,8 @@
 		22DEA39F1FC1293A000FA1CB /* CropViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2238CF351FC029880081B957 /* CropViewController.swift */; };
 		E2D2FE6F23B0F4C7008B4FDB /* tocrop_turn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2D2FE6E23B0F4C7008B4FDB /* tocrop_turn@2x.png */; };
 		E2D2FE7023B0F4C7008B4FDB /* tocrop_turn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2D2FE6E23B0F4C7008B4FDB /* tocrop_turn@2x.png */; };
+		E2D2FE7223B0F78B008B4FDB /* rotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2D2FE7123B0F78A008B4FDB /* rotate@2x.png */; };
+		E2D2FE7323B0F78B008B4FDB /* rotate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2D2FE7123B0F78A008B4FDB /* rotate@2x.png */; };
 		FE3E0E3A21098448004DAE93 /* TOCropViewConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = 220C8E9F21062DD300A9B25D /* TOCropViewConstants.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
@@ -185,6 +187,7 @@
 		CDC8C5751C667B9100BB86A4 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Main.strings; sourceTree = "<group>"; };
 		CDC8C5771C667B9100BB86A4 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/TOCropViewControllerLocalizable.strings; sourceTree = "<group>"; };
 		E2D2FE6E23B0F4C7008B4FDB /* tocrop_turn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tocrop_turn@2x.png"; sourceTree = "<group>"; };
+		E2D2FE7123B0F78A008B4FDB /* rotate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rotate@2x.png"; sourceTree = "<group>"; };
 		E4C7D121221D7465003F381A /* fa */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fa; path = fa.lproj/TOCropViewControllerLocalizable.strings; sourceTree = "<group>"; };
 		E4C7D122221D7548003F381A /* fa-IR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "fa-IR"; path = "fa-IR.lproj/TOCropViewControllerLocalizable.strings"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -263,6 +266,7 @@
 		220C8EA021062E6D00A9B25D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				E2D2FE7123B0F78A008B4FDB /* rotate@2x.png */,
 				22C3C5491AC8CA0D00E86280 /* TOCropViewControllerLocalizable.strings */,
 			);
 			path = Resources;
@@ -642,6 +646,7 @@
 			files = (
 				E2D2FE7023B0F4C7008B4FDB /* tocrop_turn@2x.png in Resources */,
 				04262D8620F6F1C600024177 /* TOCropViewControllerLocalizable.strings in Resources */,
+				E2D2FE7323B0F78B008B4FDB /* rotate@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -680,6 +685,7 @@
 			files = (
 				E2D2FE6F23B0F4C7008B4FDB /* tocrop_turn@2x.png in Resources */,
 				04262D8720F6F1D600024177 /* TOCropViewControllerLocalizable.strings in Resources */,
+				E2D2FE7223B0F78B008B4FDB /* rotate@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

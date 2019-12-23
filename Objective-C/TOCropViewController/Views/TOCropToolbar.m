@@ -386,7 +386,7 @@
 + (UIImage *)rotateCCWImage
 {
     NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_CLASS([TOCropToolbar class]);
-    NSString *path = [resourceBundle pathForResource:@"tocrop_turn" ofType:@"png"];
+    NSString *path = [resourceBundle pathForResource:@"rotate" ofType:@"png"];
     return [UIImage imageWithContentsOfFile:path];
 //    UIImage *rotateImage = nil;
     
