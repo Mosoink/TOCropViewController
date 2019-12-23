@@ -21,6 +21,7 @@
 //  IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 #import "TOCropToolbar.h"
+#import "TOCropViewController.h"
 
 #define TOCROPTOOLBAR_DEBUG_SHOWING_BUTTONS_CONTAINER_RECT 0   // convenience debug toggle
 
@@ -385,8 +386,8 @@
 
 + (UIImage *)rotateCCWImage
 {
-    NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_CLASS([TOCropToolbar class]);
-    NSString *path = [resourceBundle pathForResource:@"rotate" ofType:@"png"];
+    NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_CLASS([TOCropViewController class]);
+    NSString *path = [resourceBundle pathForResource:@"rotate@2x" ofType:@"png"];
     return [UIImage imageWithContentsOfFile:path];
 //    UIImage *rotateImage = nil;
     
@@ -426,14 +427,15 @@
 + (UIImage *)rotateCWImage
 {
     UIImage *rotateCCWImage = [self.class rotateCCWImage];
-    UIGraphicsBeginImageContextWithOptions(rotateCCWImage.size, NO, rotateCCWImage.scale);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextTranslateCTM(context, rotateCCWImage.size.width, rotateCCWImage.size.height);
-    CGContextRotateCTM(context, M_PI);
-    CGContextDrawImage(context,CGRectMake(0,0,rotateCCWImage.size.width,rotateCCWImage.size.height),rotateCCWImage.CGImage);
-    UIImage *rotateCWImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    return rotateCWImage;
+    return rotateCCWImage;
+//    UIGraphicsBeginImageContextWithOptions(rotateCCWImage.size, NO, rotateCCWImage.scale);
+//    CGContextRef context = UIGraphicsGetCurrentContext();
+//    CGContextTranslateCTM(context, rotateCCWImage.size.width, rotateCCWImage.size.height);
+//    CGContextRotateCTM(context, M_PI);
+//    CGContextDrawImage(context,CGRectMake(0,0,rotateCCWImage.size.width,rotateCCWImage.size.height),rotateCCWImage.CGImage);
+//    UIImage *rotateCWImage = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    return rotateCWImage;
 }
 
 + (UIImage *)resetImage
