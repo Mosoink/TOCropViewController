@@ -385,39 +385,42 @@
 
 + (UIImage *)rotateCCWImage
 {
-    UIImage *rotateImage = nil;
+    NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_CLASS([TOCropToolbar class]);
+    NSString *path = [resourceBundle pathForResource:@"tocrop_turn" ofType:@"png"];
+    return [UIImage imageWithContentsOfFile:path];
+//    UIImage *rotateImage = nil;
     
-    UIGraphicsBeginImageContextWithOptions((CGSize){18,21}, NO, 0.0f);
-    {
-        //// Rectangle 2 Drawing
-        UIBezierPath* rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, 9, 12, 12)];
-        [UIColor.whiteColor setFill];
-        [rectangle2Path fill];
-        
-        
-        //// Rectangle 3 Drawing
-        UIBezierPath* rectangle3Path = UIBezierPath.bezierPath;
-        [rectangle3Path moveToPoint: CGPointMake(5, 3)];
-        [rectangle3Path addLineToPoint: CGPointMake(10, 6)];
-        [rectangle3Path addLineToPoint: CGPointMake(10, 0)];
-        [rectangle3Path addLineToPoint: CGPointMake(5, 3)];
-        [rectangle3Path closePath];
-        [UIColor.whiteColor setFill];
-        [rectangle3Path fill];
-        
-        
-        //// Bezier Drawing
-        UIBezierPath* bezierPath = UIBezierPath.bezierPath;
-        [bezierPath moveToPoint: CGPointMake(10, 3)];
-        [bezierPath addCurveToPoint: CGPointMake(17.5, 11) controlPoint1: CGPointMake(15, 3) controlPoint2: CGPointMake(17.5, 5.91)];
-        [UIColor.whiteColor setStroke];
-        bezierPath.lineWidth = 1;
-        [bezierPath stroke];
-        rotateImage = UIGraphicsGetImageFromCurrentImageContext();
-    }
-    UIGraphicsEndImageContext();
+//    UIGraphicsBeginImageContextWithOptions((CGSize){18,21}, NO, 0.0f);
+//    {
+//        //// Rectangle 2 Drawing
+//        UIBezierPath* rectangle2Path = [UIBezierPath bezierPathWithRect: CGRectMake(0, 9, 12, 12)];
+//        [UIColor.whiteColor setFill];
+//        [rectangle2Path fill];
+//
+//
+//        //// Rectangle 3 Drawing
+//        UIBezierPath* rectangle3Path = UIBezierPath.bezierPath;
+//        [rectangle3Path moveToPoint: CGPointMake(5, 3)];
+//        [rectangle3Path addLineToPoint: CGPointMake(10, 6)];
+//        [rectangle3Path addLineToPoint: CGPointMake(10, 0)];
+//        [rectangle3Path addLineToPoint: CGPointMake(5, 3)];
+//        [rectangle3Path closePath];
+//        [UIColor.whiteColor setFill];
+//        [rectangle3Path fill];
+//
+//
+//        //// Bezier Drawing
+//        UIBezierPath* bezierPath = UIBezierPath.bezierPath;
+//        [bezierPath moveToPoint: CGPointMake(10, 3)];
+//        [bezierPath addCurveToPoint: CGPointMake(17.5, 11) controlPoint1: CGPointMake(15, 3) controlPoint2: CGPointMake(17.5, 5.91)];
+//        [UIColor.whiteColor setStroke];
+//        bezierPath.lineWidth = 1;
+//        [bezierPath stroke];
+//        rotateImage = UIGraphicsGetImageFromCurrentImageContext();
+//    }
+//    UIGraphicsEndImageContext();
     
-    return rotateImage;
+//    return rotateImage;
 }
 
 + (UIImage *)rotateCWImage

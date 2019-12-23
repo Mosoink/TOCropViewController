@@ -68,3 +68,17 @@ static inline NSBundle *TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(NSObject *object
     
     return resourceBundle;
 }
+static inline NSBundle *TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_CLASS(Class clazz) {
+    NSBundle *resourceBundle = nil;
+    
+    NSBundle *classBundle = [NSBundle bundleForClass:clazz];
+    NSURL *resourceBundleURL = [classBundle URLForResource:@"TOCropViewControllerBundle" withExtension:@"bundle"];
+    if (resourceBundleURL) {
+        resourceBundle = [[NSBundle alloc] initWithURL:resourceBundleURL];
+    }
+    else {
+        resourceBundle = classBundle;
+    }
+    
+    return resourceBundle;
+}
