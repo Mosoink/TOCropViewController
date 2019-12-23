@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'TOCropViewController'
-  s.version  = '3.0.0'
+  s.version  = '3.0.1'
   s.license  =  { :type => 'MIT', :file => 'LICENSE' }
   s.summary  = 'A view controller that enables cropping and rotation of UIImage objects.'
   s.homepage = 'https://github.com/Mosoink/TOCropViewController'
@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.platform = :ios, '8.0'
   s.source_files = 'Objective-C/TOCropViewController/**/*.{h,m}'
   s.resource_bundles = {
-    'TOCropViewControllerBundle' => ['Objective-C/TOCropViewController/**/*.lproj']
+    'TOCropViewControllerBundle' => ['Objective-C/TOCropViewController/**/*.png', 'Objective-C/TOCropViewController/**/*.lproj']
   }
   s.requires_arc = true
 end

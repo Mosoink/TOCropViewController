@@ -11,6 +11,7 @@ Pod::Spec.new do |s|
   s.resource_bundles = {
     'TOCropViewControllerBundle' => ['Objective-C/TOCropViewController/**/*.png', 'Objective-C/TOCropViewController/**/*.lproj']
   }
+  
   s.requires_arc = true
   s.swift_version = '5.0'
 end
