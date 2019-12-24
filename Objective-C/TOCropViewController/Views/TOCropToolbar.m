@@ -144,8 +144,6 @@
 #endif
     
     if (verticalLayout == NO) {
-        CGFloat insetPadding = 10.0f;
-        
         // Work out the cancel button frame
         CGRect frame = CGRectZero;
         frame.size.height = 44.0f;
@@ -153,21 +151,30 @@
 
         //If normal layout, place on the left side, else place on the right
         if (self.reverseContentLayout == NO) {
-            frame.origin.x = insetPadding;
+            frame.origin.x = _contentInsets.left;
         }
         else {
-            frame.origin.x = boundsSize.width - (frame.size.width + insetPadding);
+            frame.origin.x = boundsSize.width - (frame.size.width + _contentInsets.right);
         }
         self.cancelTextButton.frame = frame;
         
         // Work out the Done button frame
         frame.size.width = MIN(self.frame.size.width / 3.0, self.doneTextButton.frame.size.width);
+
         
         if (self.reverseContentLayout == NO) {
-            frame.origin.x = boundsSize.width - (frame.size.width + insetPadding);
+            if ([_doneTextButton imageForState:UIControlStateNormal]) {
+                frame.origin.x = boundsSize.width - (frame.size.width + _contentInsets.right - 5);
+            } else {
+                frame.origin.x = boundsSize.width - (frame.size.width + _contentInsets.right);
+            }
         }
         else {
-            frame.origin.x = insetPadding;
+            if ([_doneTextButton imageForState:UIControlStateNormal]) {
+                frame.origin.x = _contentInsets.left - 5;
+            } else {
+                frame.origin.x = _contentInsets.left;
+            }
         }
         self.doneTextButton.frame = frame;
         
@@ -190,7 +197,7 @@
         CGSize buttonSize = (CGSize){44.0f,44.0f};
         
         if (!self.rotateButtonHidden) {
-            self.rotateButton.frame = CGRectMake(0,
+            self.rotateButton.frame = CGRectMake(_contentInsets.left - 10,
                                                  (frame.size.height - buttonSize.height) / 2.,
                                                  buttonSize.width,
                                                  buttonSize.height);

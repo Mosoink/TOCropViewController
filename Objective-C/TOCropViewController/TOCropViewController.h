@@ -423,5 +423,9 @@
                                           setup:(nullable void (^)(void))setup
                                      completion:(nullable void (^)(void))completion NS_SWIFT_NAME(dismissAnimatedFrom(_:croppedImage:toView:toFrame:setup:completion:));
 
+
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
+@property (nonatomic, strong, readonly) UIButton *rightBarButton;
+
 @end
 

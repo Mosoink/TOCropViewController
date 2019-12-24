@@ -105,6 +105,8 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
         // Default initial behaviour
         _aspectRatioPreset = TOCropViewControllerAspectRatioPresetOriginal;
         _toolbarPosition = TOCropViewControllerToolbarPositionBottom;
+        
+        self.contentInsets = UIEdgeInsetsMake(0, 10, 0, 10);
     }
 	
     return self;
@@ -119,6 +121,8 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 {
     [super viewDidLoad];
 
+    self.toolbar.contentInsets = _contentInsets;
+    
     // Set up view controller properties
     self.transitioningDelegate = self;
     self.view.backgroundColor = self.cropView.backgroundColor;
@@ -1032,7 +1036,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     if (!_cancelButton) {
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _cancelButton.backgroundColor = [UIColor clearColor];
-
+        _cancelButton.titleLabel.font = [UIFont systemFontOfSize:16];
         BOOL isX = isIphoneX;
         _cancelButton.frame = CGRectMake(10, isX ? 44 : 20, 44, 44);
 
@@ -1067,8 +1071,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     CGFloat w = [self.cancelButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, 44)].width;
     w = MAX((CGFloat)44, w);
     CGRect f = self.cancelButton.frame;
-    f.size.width = w;
-    self.cancelButton.frame = f;
+    self.cancelButton.frame = CGRectMake(_contentInsets.left, f.origin.y, w, f.size.height);
 }
 
 - (TOCropView *)cropView {

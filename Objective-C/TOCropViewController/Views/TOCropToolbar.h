@@ -71,6 +71,7 @@ NS_ASSUME_NONNULL_BEGIN
 /* Done button frame for popover controllers */
 @property (nonatomic, readonly) CGRect doneButtonFrame;
 
+@property (nonatomic, assign) UIEdgeInsets contentInsets;
 @end
 
 NS_ASSUME_NONNULL_END
