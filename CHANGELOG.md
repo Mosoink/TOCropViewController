@@ -1,6 +1,31 @@
 x.y.z Release Notes (yyyy-MM-dd)
 =============================================================
 
+2.5.3 Release Notes (2020-06-11)
+=============================================================
+
+## Added
+
+* SPM Support. ([#413](https://github.com/TimOliver/TOCropViewController/pull/413))
+* The ability to explicitly show and hide the 'Cancel' and 'Done' buttons in the toolbar. ([#392](https://github.com/TimOliver/TOCropViewController/pull/392))
+
+## Fixed
+
+* A memory crash caused by improper `self` usage in delegates between multiple instances of the Swift crop view controller. ([#409](https://github.com/TimOliver/TOCropViewController/pull/409))
+
+2.5.2 Release Notes (2019-10-23)
+=============================================================
+
+## Added
+
+* Brazilian Portuguese Language Support ([#380](https://github.com/TimOliver/TOCropViewController/issues/380))
+
+## Fixed
+
+* A visual glitch that would occur in iOS 13 because the Swift view controller wasn't explicitly marked as full screen. ([#385](https://github.com/TimOliver/TOCropViewController/issues/385))
+* A visual glitch where the image would snap upwards during the presentation animation on non-Face ID devices. ([#387](https://github.com/TimOliver/TOCropViewController/issues/387))
+* A bug where subclassing the class in Swift would fail because it wasn't using the desginated initializer. ([#379](https://github.com/TimOliver/TOCropViewController/issues/379))
+
 2.5.1 Release Notes (2019-07-08)
 =============================================================
 
