@@ -441,5 +441,7 @@
 @property (nonatomic, assign) UIEdgeInsets contentInsets;
 @property (nonatomic, strong, readonly) UIButton *rightBarButton;
 
+@property (nonatomic, assign) BOOL disableDismissAnimated;
+
 @end
 

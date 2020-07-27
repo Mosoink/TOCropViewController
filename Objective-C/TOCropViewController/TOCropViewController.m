@@ -988,7 +988,10 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
     //If cropping circular and the circular generation delegate/block is implemented, call it
     if (self.croppingStyle == TOCropViewCroppingStyleCircular && (isCircularImageDelegateAvailable || isCircularImageCallbackAvailable)) {
-        UIImage *image = [self.image croppedImageWithFrame:cropFrame angle:angle circularClip:YES];
+        UIImage *image = nil;
+        if (!_disableDismissAnimated) {
+            image = [self.image croppedImageWithFrame:cropFrame angle:angle circularClip:YES];
+        }
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.03f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
@@ -1005,11 +1008,13 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     //If the delegate/block that requires the specific cropped image is provided, call it
     else if (isDidCropToImageDelegateAvailable || isDidCropToImageCallbackAvailable) {
         UIImage *image = nil;
-        if (angle == 0 && CGRectEqualToRect(cropFrame, (CGRect){CGPointZero, self.image.size})) {
-            image = self.image;
-        }
-        else {
-            image = [self.image croppedImageWithFrame:cropFrame angle:angle circularClip:NO];
+        if (!_disableDismissAnimated) {
+            if (angle == 0 && CGRectEqualToRect(cropFrame, (CGRect){CGPointZero, self.image.size})) {
+                image = self.image;
+            }
+            else {
+                image = [self.image croppedImageWithFrame:cropFrame angle:angle circularClip:NO];
+            }
         }
         
         //Dispatch on the next run-loop so the animation isn't interuppted by the crop operation
@@ -1027,7 +1032,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     }
     
     if (!isCallbackOrDelegateHandled) {
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+        [self.presentingViewController dismissViewControllerAnimated:!_disableDismissAnimated completion:nil];
     }
 }
 
