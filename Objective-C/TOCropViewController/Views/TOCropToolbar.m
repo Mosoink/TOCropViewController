@@ -121,10 +121,10 @@
     BOOL verticalLayout = (CGRectGetWidth(self.bounds) < CGRectGetHeight(self.bounds));
     CGSize boundsSize = self.bounds.size;
     
-    self.cancelIconButton.hidden = self.cancelButtonHidden || (!verticalLayout);
-    self.cancelTextButton.hidden = self.cancelButtonHidden || (verticalLayout);
-    self.doneIconButton.hidden   = self.doneButtonHidden || (!verticalLayout);
-    self.doneTextButton.hidden   = self.doneButtonHidden || (verticalLayout);
+    self.cancelIconButton.hidden = self.cancelButtonHidden;
+    self.cancelTextButton.hidden = self.cancelButtonHidden;
+    self.doneIconButton.hidden   = self.doneButtonHidden;
+    self.doneTextButton.hidden   = self.doneButtonHidden;
 
     CGRect frame = self.bounds;
     frame.origin.x -= self.backgroundViewOutsets.left;
@@ -212,39 +212,52 @@
         }
     }
     else {
-        CGRect frame = CGRectZero;
-        frame.size.height = 44.0f;
-        frame.size.width = 44.0f;
-        frame.origin.y = CGRectGetHeight(self.bounds) - 44.0f;
-        self.cancelIconButton.frame = frame;
+//        CGRect frame = CGRectZero;
+//        frame.size.height = 44.0f;
+//        frame.size.width = 44.0f;
+//        frame.origin.y = CGRectGetHeight(self.bounds) - 44.0f;
+//        self.cancelIconButton.frame = frame;
         
-        frame.origin.y = self.statusBarHeightInset;
-        frame.size.width = 44.0f;
-        frame.size.height = 44.0f;
-        self.doneIconButton.frame = frame;
+        CGSize buttonSize = (CGSize){44.0f,44.0f};
         
-        CGRect containerRect = (CGRect){0,CGRectGetMaxY(self.doneIconButton.frame),44.0f,CGRectGetMinY(self.cancelIconButton.frame)-CGRectGetMaxY(self.doneIconButton.frame)};
+        if (!self.rotateButtonHidden) {
+            self.rotateButton.frame = CGRectMake(0,
+                                                 CGRectGetHeight(self.bounds) - 44.0f - _contentInsets.left,
+                                                 buttonSize.width,
+                                                 buttonSize.height);
+        }
+        if (!self.resetButtonHidden) {
+            self.resetButton.frame = CGRectMake(0,
+                                                (self.bounds.size.height - buttonSize.height) / 2.,
+                                                buttonSize.width,
+                                                buttonSize.height);
+        }
+        
+        self.doneTextButton.frame = CGRectMake(0,  _contentInsets.right, buttonSize.width, buttonSize.height);
+        
+        CGRect containerRect = (CGRect){0,CGRectGetMaxY(self.doneTextButton.frame),44.0f,CGRectGetMinY(self.rotateButton.frame)-CGRectGetMaxY(self.doneTextButton.frame)};
         
 #if TOCROPTOOLBAR_DEBUG_SHOWING_BUTTONS_CONTAINER_RECT
         containerView.frame = containerRect;
 #endif
         
-        CGSize buttonSize = (CGSize){44.0f,44.0f};
+//        CGSize buttonSize = (CGSize){44.0f,44.0f};
         
-        NSMutableArray *buttonsInOrderVertically = [NSMutableArray new];
-        if (!self.resetButtonHidden) {
-            [buttonsInOrderVertically addObject:self.resetButton];
-        }
+//        NSMutableArray *buttonsInOrderVertically = [NSMutableArray new];
+//        if (!self.resetButtonHidden) {
+//            [buttonsInOrderVertically addObject:self.resetButton];
+//        }
+//
+//        if (!self.clampButtonHidden) {
+//            [buttonsInOrderVertically addObject:self.clampButton];
+//        }
+//
+//        if (!self.rotateButtonHidden) {
+//            [buttonsInOrderVertically addObject:self.rotateButton];
+//        }
+//
+//        [self layoutToolbarButtons:buttonsInOrderVertically withSameButtonSize:buttonSize inContainerRect:containerRect horizontally:NO];
         
-        if (!self.clampButtonHidden) {
-            [buttonsInOrderVertically addObject:self.clampButton];
-        }
-        
-        if (!self.rotateButtonHidden) {
-            [buttonsInOrderVertically addObject:self.rotateButton];
-        }
-        
-        [self layoutToolbarButtons:buttonsInOrderVertically withSameButtonSize:buttonSize inContainerRect:containerRect horizontally:NO];
     }
 }
 

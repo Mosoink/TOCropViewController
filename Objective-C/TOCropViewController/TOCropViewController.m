@@ -153,6 +153,10 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 {
     [super viewWillAppear:animated];
     
+//    if ([UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
+//        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationPortrait] forKey:@"orientation"];
+//    }
+    
     // If we're animating onto the screen, set a flag
     // so we can manually control the status bar fade out timing
     if (animated) {
@@ -278,13 +282,20 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     return UIRectEdgeAll;
 }
 
+- (UIEdgeInsets)_safeAreaInsets {
+    if (@available(iOS 11.0, *)) {
+        return self.view.safeAreaInsets;
+    }
+    return UIEdgeInsetsZero;
+}
+
 - (CGRect)frameForToolbarWithVerticalLayout:(BOOL)verticalLayout
 {
     UIEdgeInsets insets = self.statusBarSafeInsets;
 
     CGRect frame = CGRectZero;
     if (!verticalLayout) { // In landscape laying out toolbar to the left
-        frame.origin.x = insets.left;
+        frame.origin.x = CGRectGetWidth(self.view.bounds) - insets.right - [self _safeAreaInsets].right;
         frame.origin.y = 0.0f;
         frame.size.width = kTOCropViewControllerToolbarHeight;
         frame.size.height = CGRectGetHeight(self.view.frame);
@@ -301,6 +312,24 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
         }
     }
     
+    return frame;
+}
+
+- (CGRect)frameForCancelButtonWithVerticalLayout:(BOOL)verticalLayout
+{
+    
+    CGFloat w = [self.cancelButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, 44)].width;
+    w = MAX((CGFloat)44, w);
+    
+    UIEdgeInsets insets = self.statusBarSafeInsets;
+    CGRect frame = CGRectMake(0, 0, w, 44);
+    if (!verticalLayout) {
+        frame.origin.x = [self _safeAreaInsets].left + 10;
+        frame.origin.y = insets.top;
+    } else {
+        frame.origin.x = 10;
+        frame.origin.y = insets.top;
+    }
     return frame;
 }
 
@@ -340,7 +369,6 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
             frame.size.height -= frame.origin.y;
         }
     }
-    
     return frame;
 }
 
@@ -378,10 +406,11 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 - (void)adjustCropViewInsets
 {
     UIEdgeInsets insets = self.statusBarSafeInsets;
-
+    
     // If there is no title text, inset the top of the content as high as possible
     if (!self.titleLabel.text.length) {
         if (self.verticalLayout) {
+          insets.top += 44;
           if (self.toolbarPosition == TOCropViewControllerToolbarPositionTop) {
             self.cropView.cropRegionInsets = UIEdgeInsetsMake(0.0f, 0.0f, insets.bottom, 0.0f);
           }
@@ -464,12 +493,22 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
         [self.cropView moveCroppedContentToCenterAnimated:NO];
     }
 
+    _cancelButton.frame = [self frameForCancelButtonWithVerticalLayout:self.verticalLayout];
+
     [UIView performWithoutAnimation:^{
         self.toolbar.frame = [self frameForToolbarWithVerticalLayout:self.verticalLayout];
         [self adjustToolbarInsets];
         [self.toolbar setNeedsLayout];
     }];
 }
+
+//- (BOOL)shouldAutorotate{
+//    return NO;
+//}
+//
+//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+//    return UIInterfaceOrientationMaskPortrait;
+//}
 
 #pragma mark - Rotation Handling -
 
@@ -488,13 +527,15 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
     // Set up the toolbar frame to be just off t
     CGRect frame = [self frameForToolbarWithVerticalLayout:UIInterfaceOrientationIsPortrait(toInterfaceOrientation)];
-    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
-        frame.origin.x = -frame.size.width;
-    }
-    else {
-        frame.origin.y = self.view.bounds.size.height;
-    }
+//    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+//        frame.origin.x = -frame.size.width;
+//    }
+//    else {
+//        frame.origin.y = self.view.bounds.size.height;
+//    }
     self.toolbar.frame = frame;
+    
+    self.cancelButton.frame = [self frameForCancelButtonWithVerticalLayout:UIInterfaceOrientationIsPortrait(toInterfaceOrientation)];
 
     [self.toolbar layoutIfNeeded];
     self.toolbar.alpha = 0.0f;
@@ -1042,8 +1083,6 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
         _cancelButton = [UIButton buttonWithType:UIButtonTypeCustom];
         _cancelButton.backgroundColor = [UIColor clearColor];
         _cancelButton.titleLabel.font = [UIFont systemFontOfSize:16];
-        BOOL isX = isIphoneX;
-        _cancelButton.frame = CGRectMake(10, isX ? 44 : 20, 44, 44);
 
         NSBundle *resourceBundle = TO_CROP_VIEW_RESOURCE_BUNDLE_FOR_OBJECT(self);
         self.cancelButtonTitle = NSLocalizedStringFromTableInBundle(@"Cancel", @"TOCropViewControllerLocalizable", resourceBundle,nil);
@@ -1073,10 +1112,7 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 
 - (void)setCancelButtonTitle:(NSString *)title {
     [self.cancelButton setTitle:title forState:UIControlStateNormal];
-    CGFloat w = [self.cancelButton sizeThatFits:CGSizeMake(CGFLOAT_MAX, 44)].width;
-    w = MAX((CGFloat)44, w);
-    CGRect f = self.cancelButton.frame;
-    self.cancelButton.frame = CGRectMake(_contentInsets.left, f.origin.y, w, f.size.height);
+    self.cancelButton.frame = [self frameForCancelButtonWithVerticalLayout:self.verticalLayout];
 }
 
 - (TOCropView *)cropView {
