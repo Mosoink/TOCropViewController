@@ -153,9 +153,9 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
 {
     [super viewWillAppear:animated];
     
-//    if ([UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
-//        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationPortrait] forKey:@"orientation"];
-//    }
+    if ([UIDevice currentDevice].orientation != UIDeviceOrientationPortrait) {
+        [[UIDevice currentDevice] setValue:[NSNumber numberWithInt:UIDeviceOrientationPortrait] forKey:@"orientation"];
+    }
     
     // If we're animating onto the screen, set a flag
     // so we can manually control the status bar fade out timing
@@ -502,13 +502,13 @@ static const CGFloat kTOCropViewControllerToolbarHeight = 44.0f;
     }];
 }
 
-//- (BOOL)shouldAutorotate{
-//    return NO;
-//}
-//
-//- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
-//    return UIInterfaceOrientationMaskPortrait;
-//}
+- (BOOL)shouldAutorotate{
+    return NO;
+}
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
 
 #pragma mark - Rotation Handling -
 
